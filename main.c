@@ -145,12 +145,35 @@ char alternate(cpu*c,char ch) {
       case 'd':scanf("%c",&dum);
                if(dum == 10) {
                      cpu_dump_mem(c, base_offset(c->cs, c->ip), base_offset(c->cs, c->ip+40));
-                  } /*add functionality to dump in range*/
+                  } 
+               else if(dum == 32) {
+                  scanf("%d",&a);
+                  scanf("%c",&dum);
+                  if(dum == 10) {
+                     cpu_dump_mem(c, a, a+112);
+                  }
+                  else {
+                     scanf("%d",&b);
+                     cpu_dump_mem(c, a, b);
+                     scanf("%c",&dum);
+                  }
+               }
                break;
       
       case 'h':scanf("%x ",&a);
                scanf("%x",&b);
                printf("%x %x\n",add16(c,a,b,0),sub16(c,a,b,0));
+               break;
+
+      case 'p':clrscr();
+               u32 instr;
+               while(instr!=0) {
+                  instr = cpu_fetch(c);
+                  cpu_exec(c,instr);
+               }
+               instr_det(instr);
+               cpu_dump(c);
+               flagPrint();
                break;
 
       case 'r':cpu_dump(c);
